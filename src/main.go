@@ -128,12 +128,14 @@ func applyToResolved(conn *dbus.Conn, ifName, domain, dnsIP string) {
 	if dnsIP != "" {
 		ip := net.ParseIP(dnsIP).To4()
 		if ip != nil {
+			log.Printf("Setting DNS for interface %s to %s", ifName, ip.String())
 			dnsEntry := []interface{}{int32(2), []byte(ip)}
 			resObj.Call("org.freedesktop.resolve1.Manager.SetLinkDNS", 0, ifIndex, []interface{}{dnsEntry})
 		}
 	}
 
 	if domain != "" {
+		log.Printf("Setting domains for interface %s to %s", ifName, domain)
 		domainEntry := []interface{}{domain, true}
 		resObj.Call("org.freedesktop.resolve1.Manager.SetLinkDomains", 0, ifIndex, []interface{}{domainEntry})
 	}

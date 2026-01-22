@@ -5,7 +5,7 @@ Requires=libvirt-dbus.service
 
 [Service]
 Type=simple
-ExecStart=/usr/local/bin/libvirt-resolved-bridge
+ExecStart=/usr/bin/libvirt-resolved-bridge
 Restart=on-failure
 RestartSec=5s
 

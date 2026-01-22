@@ -15,14 +15,14 @@ jobs:
     - name: Set up Go
       uses: actions/setup-go@v5
       with:
-        go-version: '1.21'
+        go-version-file: go.mod
         cache: true
 
-    - name: Install dependencies
-      run: go mod tidy
+    - name: Build
+      run: make build
 
-    - name: Verify Compilation
-      run: go build -v ./src
+    - name: Test
+      run: make test
 
-    - name: Run Tests
-      run: go test -v ./src
+    - name: Verify archive
+      run: make archive

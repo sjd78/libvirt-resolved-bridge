@@ -1,13 +1,26 @@
 [Unit]
 Description=Bridge Libvirt Network Config to Systemd-Resolved
-After=libvirtd.service systemd-resolved.service libvirt-dbus.service
-Requires=libvirt-dbus.service
+Documentation=https://github.com/sjd78/libvirt-resolved-bridge
+After=libvirtd.service libvirt-dbus.service systemd-resolved.service
+Requires=libvirt-dbus.service systemd-resolved.service
 
 [Service]
 Type=simple
 ExecStart=/usr/bin/libvirt-resolved-bridge
 Restart=on-failure
 RestartSec=5s
+
+# Security hardening
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=yes
+PrivateTmp=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectControlGroups=yes
+RestrictNamespaces=yes
+RestrictRealtime=yes
+MemoryDenyWriteExecute=yes
 
 [Install]
 WantedBy=multi-user.target

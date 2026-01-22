@@ -1,0 +1,13 @@
+[Unit]
+Description=Bridge Libvirt Network Config to Systemd-Resolved
+After=libvirtd.service systemd-resolved.service libvirt-dbus.service
+Requires=libvirt-dbus.service
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/libvirt-resolved-bridge
+Restart=on-failure
+RestartSec=5s
+
+[Install]
+WantedBy=multi-user.target

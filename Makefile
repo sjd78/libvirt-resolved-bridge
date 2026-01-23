@@ -82,7 +82,7 @@ srpm: archive
 		$(APP_NAME).spec
 
 .PHONY: rpm
-rpm: archive
+rpm: srpm
 	mkdir -p $(RPM_DIR)
 	rpmbuild -bb \
 		--define "_sourcedir $(CURDIR)" \

@@ -3,6 +3,9 @@ Version:        0.1.0
 Release:        1%{?dist}
 Summary:        Bridge Libvirt network configurations to systemd-resolved
 
+# Go binaries don't produce debuginfo
+%global debug_package %{nil}
+
 License:        Apache-2.0
 URL:            https://github.com/sjd78/%{name}
 Source0:        %{name}-%{version}.tar.gz

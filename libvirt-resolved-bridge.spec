@@ -11,6 +11,7 @@ URL:            https://github.com/sjd78/%{name}
 Source0:        %{name}-%{version}.tar.gz
 
 BuildRequires:  make
+BuildRequires:  git
 BuildRequires:  golang >= 1.21
 BuildRequires:  systemd-rpm-macros
 

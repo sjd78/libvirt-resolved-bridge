@@ -1,0 +1,17 @@
+version: 2
+updates:
+  # Go modules (dependencies in go.mod)
+  - package-ecosystem: gomod
+    directory: /
+    schedule:
+      interval: monthly
+    commit-message:
+      prefix: "deps(go)"
+
+  # GitHub Actions
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+    commit-message:
+      prefix: "deps(actions)"

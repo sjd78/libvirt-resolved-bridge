@@ -38,7 +38,7 @@ jobs:
             \`\`\`
             ${ steps.changed-files.outputs.all_changed_files }
             \`\`\`
-            EOF
+          EOF
             exit 0
           else
             cat >> "$GITHUB_STEP_SUMMARY" <<EOF
@@ -53,7 +53,7 @@ jobs:
             ### How to fix:
             - **Bump Version** for new features or breaking changes
             - **Bump Release** for bug fixes or minor changes
-            EOF
+          EOF
             exit 1
           fi
         else
@@ -70,7 +70,7 @@ jobs:
           Update \`libvirt-resolved-bridge.spec\`:
           - **Bump Version** for new features or breaking changes
           - **Bump Release** for bug fixes or minor changes
-          EOF
+        EOF
           exit 1
         fi
 

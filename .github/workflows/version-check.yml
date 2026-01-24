@@ -25,60 +25,65 @@ jobs:
 
     - name: Check if version was updated
       if: steps.changed-files.outputs.any_changed == 'true'
+      env:
+        CHANGED_FILES: ${{ steps.changed-files.outputs.all_changed_files }}
       run: |
-        # Check if Version or Release line was modified in the spec file
-        if git diff origin/main --name-only | grep -q "libvirt-resolved-bridge.spec"; then
-          # Spec file was modified, check if Version or Release changed
-          if git diff origin/main -- libvirt-resolved-bridge.spec | grep -qE '^\+Version:|^\+Release:'; then
-            cat >> "$GITHUB_STEP_SUMMARY" <<EOF
-            ## ✅ Version Check Passed
-            Version or Release was updated in the spec file.
+        FILES_LIST=$(echo "$CHANGED_FILES" | tr ' ' '\n')
 
-            ### Changed RPM-relevant files:
-            \`\`\`
-            ${ steps.changed-files.outputs.all_changed_files }
-            \`\`\`
-          EOF
+        if git diff origin/main --name-only | grep -q "libvirt-resolved-bridge.spec"; then
+          if git diff origin/main -- libvirt-resolved-bridge.spec | grep -qE '^\+Version:|^\+Release:'; then
+            printf '%s\n' \
+              "## ✅ Version Check Passed" \
+              "" \
+              "Version or Release was updated in the spec file." \
+              "" \
+              "### Changed RPM-relevant files:" \
+              '```' \
+              "$FILES_LIST" \
+              '```' \
+              >> "$GITHUB_STEP_SUMMARY"
             exit 0
           else
-            cat >> "$GITHUB_STEP_SUMMARY" <<EOF
-            ## ⚠️ Version Check Failed
-            Spec file was modified but **Version** or **Release** was not changed.
-
-            ### Changed RPM-relevant files:
-            \`\`\`
-            ${ steps.changed-files.outputs.all_changed_files }
-            \`\`\`
-
-            ### How to fix:
-            - **Bump Version** for new features or breaking changes
-            - **Bump Release** for bug fixes or minor changes
-          EOF
+            printf '%s\n' \
+              "## ⚠️ Version Check Failed" \
+              "" \
+              "Spec file was modified but **Version** or **Release** was not changed." \
+              "" \
+              "### Changed RPM-relevant files:" \
+              '```' \
+              "$FILES_LIST" \
+              '```' \
+              "" \
+              "### How to fix:" \
+              "- **Bump Version** for new features or breaking changes" \
+              "- **Bump Release** for bug fixes or minor changes" \
+              >> "$GITHUB_STEP_SUMMARY"
             exit 1
           fi
         else
-          cat >> "$GITHUB_STEP_SUMMARY" <<EOF
-          ## ❌ Version Check Failed
-          RPM-relevant files were changed but the spec file **Version/Release** was not updated.
-
-          ### Changed files that require a version bump:
-          \`\`\`
-          ${ steps.changed-files.outputs.all_changed_files }
-          \`\`\`
-
-          ### How to fix:
-          Update \`libvirt-resolved-bridge.spec\`:
-          - **Bump Version** for new features or breaking changes
-          - **Bump Release** for bug fixes or minor changes
-        EOF
+          printf '%s\n' \
+            "## ❌ Version Check Failed" \
+            "" \
+            "RPM-relevant files were changed but the spec file **Version/Release** was not updated." \
+            "" \
+            "### Changed files that require a version bump:" \
+            '```' \
+            "$FILES_LIST" \
+            '```' \
+            "" \
+            "### How to fix:" \
+            "Update \`libvirt-resolved-bridge.spec\`:" \
+            "- **Bump Version** for new features or breaking changes" \
+            "- **Bump Release** for bug fixes or minor changes" \
+            >> "$GITHUB_STEP_SUMMARY"
           exit 1
         fi
 
     - name: No version check needed
       if: steps.changed-files.outputs.any_changed != 'true'
       run: |
-        cat >> "$GITHUB_STEP_SUMMARY" <<EOF
-        ## ✅ Version Check Skipped
-        No RPM-relevant files were changed in this PR.
-        EOF
-
+        printf '%s\n' \
+          "## ✅ Version Check Skipped" \
+          "" \
+          "No RPM-relevant files were changed in this PR." \
+          >> "$GITHUB_STEP_SUMMARY"

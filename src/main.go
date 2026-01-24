@@ -50,12 +50,28 @@ func main() {
 	}
 	defer conn.Close()
 
-	// Listen for NetworkEvent signals from org.libvirt.Connect interface
-	rule := "type='signal',sender='org.libvirt',path='/org/libvirt/QEMU',interface='org.libvirt.Connect',member='NetworkEvent'"
-	call := conn.BusObject().Call("org.freedesktop.DBus.AddMatch", 0, rule)
-	if call.Err != nil {
-		log.Fatalf("Failed to add match rule: %v", call.Err)
+	log.Println("Connected to system bus")
+
+	// Ping libvirt-dbus to ensure it's activated and ready
+	libvirtObj := conn.Object("org.libvirt", "/org/libvirt/QEMU")
+	var introspectXML string
+	err = libvirtObj.Call("org.freedesktop.DBus.Introspectable.Introspect", 0).Store(&introspectXML)
+	if err != nil {
+		log.Printf("Warning: Could not introspect libvirt-dbus (may not be ready): %v", err)
+	} else {
+		log.Println("libvirt-dbus is responding")
 	}
+
+	// Listen for NetworkEvent signals from org.libvirt.Connect interface
+	if err := conn.AddMatchSignal(
+		dbus.WithMatchSender("org.libvirt"),
+		dbus.WithMatchObjectPath("/org/libvirt/QEMU"),
+		dbus.WithMatchInterface("org.libvirt.Connect"),
+		dbus.WithMatchMember("NetworkEvent"),
+	); err != nil {
+		log.Fatalf("Failed to add match signal: %v", err)
+	}
+	log.Println("Match signal registered successfully")
 
 	signals := make(chan *dbus.Signal, 10)
 	conn.Signal(signals)

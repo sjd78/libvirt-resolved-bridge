@@ -1,6 +1,6 @@
 Name:           libvirt-resolved-bridge
 Version:        0.1.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Bridge Libvirt network configurations to systemd-resolved
 
 # Go binaries don't produce debuginfo

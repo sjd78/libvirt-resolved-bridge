@@ -1,3 +1,6 @@
+![copr status](https://copr.fedorainfracloud.org/coprs/sdickers/libvirt-resolved-bridge/package/libvirt-resolved-bridge/status_image/last_build.png)
+[![CI](https://github.com/sjd78/libvirt-resolved-bridge/actions/workflows/ci.yml/badge.svg?branch=main&event=push)](https://github.com/sjd78/libvirt-resolved-bridge/actions/workflows/ci.yml)
+
 # libvirt-resolved-bridge
 
 A Go daemon that bridges Libvirt network configurations to `systemd-resolved`.
@@ -13,7 +16,18 @@ A Go daemon that bridges Libvirt network configurations to `systemd-resolved`.
 - `libvirt-dbus` installed and running (`sudo dnf install libvirt-dbus`)
 - Go 1.21+
 
-### Installation
-1. Compile the binary: `go build -o libvirt-resolved-bridge ./src`
-2. Move it to `/usr/local/bin/`
-3. Install the systemd unit provided in `libvirt-resolved-bridge.service`.
+### Build and installation
+
+#### To manually build and install the service:
+```sh
+make build
+sudo make install
+sudo systemctl daemon-reload
+sudo systemctl enable --now libvirt-resolved-bridge
+```
+
+#### Install from the copr tracking the main branch in this repo:
+```sh
+sudo dnf copr enable sdickers/libvirt-resolved-bridge
+sudo dnf install libvirt-resolved-bridge
+```

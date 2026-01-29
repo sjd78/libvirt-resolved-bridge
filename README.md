@@ -31,3 +31,8 @@ sudo systemctl enable --now libvirt-resolved-bridge
 sudo dnf copr enable sdickers/libvirt-resolved-bridge
 sudo dnf install libvirt-resolved-bridge
 ```
+
+### Attribution
+
+AI Attribution: AIA Primarily AI, Human-initiated, Reviewed, claude-4.5-opus-high v1.0
+Ref: https://aiattribution.github.io/
